@@ -102,11 +102,7 @@ fn ranked_mirrors<'a>(query: &str, mirrors: &'a [Mirror]) -> Vec<&'a Mirror> {
     scored.into_iter().map(|(mirror, _)| mirror).collect()
 }
 
-fn select_mirror(
-    country: &str,
-    matches: &[&Mirror],
-    non_interactive: bool,
-) -> Result<String, Box<dyn std::error::Error>> {
+fn select_mirror(country: &str, matches: &[&Mirror]) -> Result<String, Box<dyn std::error::Error>> {
     if matches.is_empty() {
         return Err(format!("no CRAN mirrors matched country query '{}'", country).into());
     }
@@ -130,7 +126,7 @@ fn select_mirror(
         return Ok(shown[0].url.clone());
     }
 
-    if non_interactive || !io::stdin().is_terminal() {
+    if !io::stdin().is_terminal() {
         println!(
             "Non-interactive mode: auto-selecting #1 -> {}",
             shown[0].url
@@ -167,7 +163,7 @@ pub fn resolve_cran_repo(args: &Cli) -> Result<String, Box<dyn std::error::Error
     if let Some(country) = &args.country {
         let mirrors = fetch_cran_mirrors()?;
         let matches = ranked_mirrors(country, &mirrors);
-        return select_mirror(country, &matches, args.non_interactive);
+        return select_mirror(country, &matches);
     }
 
     Ok(DEFAULT_CRAN_REPO.to_string())
