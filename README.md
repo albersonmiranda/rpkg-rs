@@ -9,9 +9,10 @@
 - Optionally select CRAN mirrors by country with fuzzy matching
 - Optionally set custom URLs that takes precedence over CRAN url (e.g., R-Universe)
 - Interactive numbered repository selection when there are multiple country matches
-- Non-interactive auto-selection of the best match when requested
+- Auto-selection of the best match when stdin is not a terminal (e.g. CI/scripts)
 - Install from explicit git source flags (Github, Gitlab, Codeberg, Bitbucket)
 - Optionally install to a library path with `-l` / `--library`
+- Automatic fallback to personal library when the system library is not writable
 
 ## Prerequisites
 
@@ -41,9 +42,6 @@ rpkg ggplot2 fio mlr3
 
 # Select a CRAN mirror by country (fuzzy matched), then select one between matches
 rpkg ggplot2 --country brazil
-
-# Select by country but auto-pick best match without prompting
-rpkg ggplot2 --country brazil --non-interactive
 
 # Set custom URL (e.g., R-Universe)
 rpkg fio --url https://albersonmiranda.r-universe.dev -c brazil
@@ -93,7 +91,6 @@ Options:
 
 ```text
 -c, --country <COUNTRY>         Country query used for CRAN mirror fuzzy matching
---non-interactive               Auto-select best mirror when multiple matches are found
 -l, --library <LIBRARY>         Path to install package library (optional)
 --url <URL>                     Additional custom repository URL (repeatable)
 --update                        Update all installed packages before installing
@@ -105,6 +102,16 @@ Options:
 -V, --version                   Print version information
 ```
 
+## Library path behavior
+
+When no `--library` is specified, `rpkg` checks if the default R library (`.libPaths()[1]`) is writable. If it isn't — which is common on Linux/macOS where the system library is owned by root — `rpkg` automatically:
+
+1. Reads the `R_LIBS_USER` environment variable (set by R, typically `~/R/<arch>/<version>/`)
+2. Creates the directory if it doesn't exist
+3. Prepends it to `.libPaths()` so packages install there
+
+This mirrors what R does in an interactive session when it prompts _"Would you like to use a personal library instead?"_.
+
 ## Uninstall
 If installed via Cargo:
 
@@ -115,6 +122,10 @@ cargo uninstall rpkg
 ## Contributing
 
 Contributions, issues, and feature requests are welcome! Feel free to open a PR or issue.
+
+## Changelog
+
+See [NEWS.md](NEWS.md) for a detailed changelog.
 
 ## License
 
