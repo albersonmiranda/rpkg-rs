@@ -1,7 +1,7 @@
 [package]
 name = "rpkg"
 authors = ["Alberson da Silva Miranda <albersonmiranda@hotmail.com>"]
-version = "0.3.0"
+version = "0.3.1"
 description = "A lightweight CLI wrapper around Rscript for installing R packages from CRAN or elsewhere"
 edition = "2021"
 license = "MIT"

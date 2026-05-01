@@ -59,9 +59,6 @@ pub struct Cli {
     #[arg(short = 'c', long)]
     pub country: Option<String>,
 
-    #[arg(long)]
-    pub non_interactive: bool,
-
     #[arg(short, long)]
     pub library: Option<String>,
 

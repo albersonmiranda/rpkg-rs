@@ -24,6 +24,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut expr_parts = Vec::new();
 
+    if library.is_none() {
+        expr_parts.push(
+            r#"local({
+    lib <- .libPaths()[1]
+    if (file.access(lib, 2) != 0) {
+        user_lib <- Sys.getenv("R_LIBS_USER")
+        if (!nzchar(user_lib)) stop("R_LIBS_USER is not set and default library is not writable")
+        user_lib <- normalizePath(user_lib, mustWork = FALSE)
+        if (!dir.exists(user_lib)) {
+            message(sprintf("Creating personal library: %s", user_lib))
+            dir.create(user_lib, recursive = TRUE)
+        }
+        .libPaths(c(user_lib, .libPaths()))
+    }
+})"#
+            .to_string(),
+        );
+    }
+
     if update {
         let mut urls: Vec<String> = Vec::new();
         if let Some(additional_url) = &url {
@@ -33,10 +52,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let repos_expr = urls.join(", ");
 
-        let mut update_expr = format!(
-            "update.packages(ask = FALSE, repos = c({}))",
-            repos_expr
-        );
+        let mut update_expr = format!("update.packages(ask = FALSE, repos = c({}))", repos_expr);
 
         if let Some(lib) = &library {
             update_expr = format!(
@@ -120,7 +136,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let expr = expr_parts.join("; ");
 
-    let status = Command::new("Rscript").arg("-e").arg(expr).status()?;
+    let status = Command::new("Rscript").arg("-e").arg(&expr).status()?;
     if !status.success() {
         std::process::exit(status.code().unwrap_or(1));
     }
