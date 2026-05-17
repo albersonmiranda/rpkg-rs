@@ -108,7 +108,7 @@ When no `--library` is specified, `rpkg` checks if the default R library (`.libP
 
 1. Reads the `R_LIBS_USER` environment variable (set by R, typically `~/R/<arch>/<version>/`)
 2. Creates the directory if it doesn't exist
-3. Prepends it to `.libPaths()` so packages install there
+3. Prepends it to `.libPaths()` so packages install there and passes it to `update.packages()` when `--update` is used
 
 This mirrors what R does in an interactive session when it prompts _"Would you like to use a personal library instead?"_.
 

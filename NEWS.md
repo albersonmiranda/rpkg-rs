@@ -1,5 +1,12 @@
 # rpkg
 
+## rpkg 0.3.2
+
+### BUG FIXES
+
+* The personal library fix in 0.3.1 was applied only when installing new packages.
+  Now it also affects updating, when `--update` flag is used.
+
 ## rpkg 0.3.1
 
 ### BREAKING CHANGES
