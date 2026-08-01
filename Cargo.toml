@@ -1,7 +1,7 @@
 [package]
 name = "rpkg"
 authors = ["Alberson da Silva Miranda <albersonmiranda@hotmail.com>"]
-version = "0.3.1"
+version = "0.3.2"
 description = "A lightweight CLI wrapper around Rscript for installing R packages from CRAN or elsewhere"
 edition = "2021"
 license = "MIT"
@@ -12,6 +12,17 @@ readme = "README.md"
 keywords = ["r", "cli", "rscript", "cran", "installer"]
 categories = ["command-line-utilities", "development-tools"]
 
+[package.metadata.wix]
+upgrade-guid = "74BAE8E2-CE67-41EB-8EED-63B1D74E9C1B"
+path-guid = "F62A93ED-3953-4289-854A-24E7B57970EB"
+license = false
+eula = false
+
 [dependencies]
 clap = { version = "4.1.8", features = ["derive"] }
 strsim = "0.11"
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
