@@ -14,14 +14,18 @@
 - Optionally install to a library path with `-l` / `--library`
 - Automatic fallback to personal library when the system library is not writable
 
-## Prerequisites
-
-- Rust toolchain (e.g., via [rustup](https://rustup.rs/))
-- R with `Rscript` available on your `PATH`
-
 ## Installation
 
 ```bash
+# windows
+winget install AlbersonMiranda.rpkg
+
+# macOS
+brew tap albersonmiranda/rpkg-rs
+brew trust albersonmiranda/rpkg-rs
+brew install rpkg
+
+# from source (requires Rust toolchain)
 cargo install rpkg
 ```
 
@@ -113,7 +117,8 @@ When no `--library` is specified, `rpkg` checks if the default R library (`.libP
 This mirrors what R does in an interactive session when it prompts _"Would you like to use a personal library instead?"_.
 
 ## Uninstall
-If installed via Cargo:
+
+Follow your package manager or, if installed via Cargo,
 
 ```bash
 cargo uninstall rpkg
