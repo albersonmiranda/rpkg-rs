@@ -21,9 +21,7 @@
 winget install AlbersonMiranda.rpkg
 
 # macOS
-brew tap albersonmiranda/rpkg-rs
-brew trust albersonmiranda/rpkg-rs
-brew install rpkg
+brew install albersonmiranda/rpkg-rs/rpkg
 
 # from source (requires Rust toolchain)
 cargo install rpkg
